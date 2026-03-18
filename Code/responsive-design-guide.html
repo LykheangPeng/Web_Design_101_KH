@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Responsive Design — Step by Step Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1714;
+    --ink-muted: #6b6560;
+    --ink-faint: #b5b0aa;
+    --paper: #faf8f5;
+    --paper-warm: #f2ede6;
+    --paper-card: #ffffff;
+    --accent: #c8502a;
+    --accent-light: #f5e8e3;
+    --accent-dark: #8c3318;
+    --teal: #1d7a6b;
+    --teal-light: #e0f2ef;
+    --amber: #b07a18;
+    --amber-light: #fdf3dc;
+    --step-radius: 12px;
+    --font-display: 'DM Serif Display', Georgia, serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.7;
+    font-size: 16px;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(250,248,245,0.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(26,23,20,0.08);
+    padding: 0 clamp(20px, 5vw, 80px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+  }
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-steps {
+    display: flex;
+    gap: 4px;
+    list-style: none;
+  }
+  .nav-steps a {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-muted);
+    text-decoration: none;
+    padding: 4px 10px;
+    border-radius: 20px;
+    transition: all 0.2s;
+  }
+  .nav-steps a:hover { background: var(--paper-warm); color: var(--ink); }
+  .nav-steps a.active { background: var(--ink); color: var(--paper); }
+
+  /* ── HERO ── */
+  .hero {
+    padding: clamp(60px, 10vw, 120px) clamp(20px, 5vw, 80px) clamp(40px, 6vw, 80px);
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .hero-text {}
+  .hero-eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 5vw, 64px);
+    line-height: 1.08;
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .hero-desc {
+    font-size: 16px;
+    color: var(--ink-muted);
+    max-width: 420px;
+    margin-bottom: 32px;
+    line-height: 1.8;
+  }
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--ink);
+    color: var(--paper);
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s var(--ease-out);
+  }
+  .hero-cta:hover { background: var(--accent); transform: translateY(-1px); }
+  .hero-cta svg { transition: transform 0.2s; }
+  .hero-cta:hover svg { transform: translateX(3px); }
+
+  .hero-visual {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .device-stack {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+  }
+
+  /* ── DEVICE MOCKUPS ── */
+  .device {
+    border-radius: 10px;
+    border: 2px solid var(--ink);
+    background: var(--paper-card);
+    overflow: hidden;
+    position: relative;
+    box-shadow: 4px 4px 0 var(--ink);
+    transition: transform 0.3s var(--ease-out);
+  }
+  .device:hover { transform: translateY(-4px); }
+  .device-bar {
+    height: 24px;
+    background: var(--ink);
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    gap: 4px;
+  }
+  .device-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.3); }
+  .device-dot:first-child { background: #ff6b6b; }
+  .device-dot:nth-child(2) { background: #ffd93d; }
+  .device-dot:nth-child(3) { background: #6bcb77; }
+  .device-content { padding: 10px; }
+
+  .device-desktop { flex: 1; }
+  .device-tablet { width: 140px; }
+  .device-mobile { width: 80px; }
+
+  .mock-header {
+    height: 10px;
+    background: var(--accent);
+    border-radius: 3px;
+    margin-bottom: 8px;
+  }
+  .mock-grid { display: grid; gap: 5px; margin-bottom: 6px; }
+  .mock-grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .mock-grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .mock-grid-1 { grid-template-columns: 1fr; }
+  .mock-card {
+    background: var(--paper-warm);
+    border-radius: 3px;
+    height: 28px;
+  }
+  .mock-card.tall { height: 40px; }
+  .mock-line { height: 5px; background: var(--paper-warm); border-radius: 2px; margin-bottom: 4px; }
+  .mock-line.short { width: 60%; }
+  .mock-line.accent { background: var(--accent-light); }
+
+  /* ── STEPS ── */
+  .steps-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 5vw, 80px) 80px;
+  }
+  .section-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(26,23,20,0.15), transparent);
+  }
+
+  .step {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+    margin-bottom: 100px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+  }
+  .step.visible { opacity: 1; transform: none; }
+  .step:nth-child(even) .step-visual { order: -1; }
+
+  .step-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .step-number {
+    font-family: var(--font-display);
+    font-size: 13px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-tag {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .step-title {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 3vw, 36px);
+    line-height: 1.15;
+    margin-bottom: 16px;
+    color: var(--ink);
+  }
+  .step-body {
+    font-size: 15px;
+    color: var(--ink-muted);
+    line-height: 1.8;
+    margin-bottom: 24px;
+  }
+
+  /* Code blocks */
+  .code-block {
+    background: var(--ink);
+    border-radius: var(--step-radius);
+    overflow: hidden;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+  .code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .code-title { font-family: var(--font-mono); font-size: 11px; color: rgba(255,255,255,0.4); }
+  .code-copy {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 2px 8px;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+  .code-copy:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); }
+  pre {
+    padding: 16px;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    line-height: 1.7;
+    color: rgba(255,255,255,0.85);
+  }
+  .kw { color: #ff9f7e; }
+  .str { color: #a8e6a3; }
+  .prop { color: #87c7f5; }
+  .val { color: #ffd580; }
+  .cmt { color: rgba(255,255,255,0.3); font-style: italic; }
+  .sel { color: #d4b4fe; }
+
+  /* Tip boxes */
+  .tip {
+    display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    margin: 16px 0;
+    line-height: 1.6;
+  }
+  .tip-info { background: var(--teal-light); color: var(--teal); }
+  .tip-warn { background: var(--amber-light); color: var(--amber); }
+  .tip-accent { background: var(--accent-light); color: var(--accent-dark); }
+  .tip-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  /* ── VISUAL CARDS ── */
+  .step-visual {}
+  .visual-card {
+    background: var(--paper-card);
+    border: 1px solid rgba(26,23,20,0.1);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 24px rgba(26,23,20,0.06);
+  }
+  .visual-card-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(26,23,20,0.07);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .visual-card-title { font-size: 13px; font-weight: 500; color: var(--ink-muted); }
+  .visual-card-body { padding: 18px; }
+
+  /* ── VIEWPORT DEMO ── */
+  .viewport-demo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .vp-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+  .vp-bar-wrap { display: flex; align-items: center; gap: 10px; }
+  .vp-bar {
+    height: 8px;
+    border-radius: 4px;
+    background: var(--accent);
+    transition: width 0.4s var(--ease-out);
+  }
+  .vp-px { font-family: var(--font-mono); font-size: 12px; color: var(--ink-muted); }
+
+  /* ── BREAKPOINT VISUAL ── */
+  .bp-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .bp-row { display: flex; align-items: center; gap: 10px; }
+  .bp-name {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--paper);
+    background: var(--ink);
+    padding: 2px 8px;
+    border-radius: 4px;
+    min-width: 32px;
+    text-align: center;
+  }
+  .bp-range {
+    font-size: 12px;
+    color: var(--ink-muted);
+    min-width: 100px;
+  }
+  .bp-blocks { display: flex; gap: 3px; flex: 1; }
+  .bp-block {
+    height: 20px;
+    border-radius: 3px;
+    background: var(--paper-warm);
+    flex: 1;
+    transition: background 0.2s;
+  }
+  .bp-block.active { background: var(--accent); }
+
+  /* ── PICTURE DEMO ── */
+  .picture-demo {
+    background: var(--paper-warm);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+  }
+  .picture-label {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: var(--ink);
+    color: var(--paper);
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    z-index: 2;
+  }
+  .picture-demo img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+  }
+  .picture-switcher {
+    display: flex;
+    gap: 6px;
+    padding: 10px;
+    background: white;
+    border-top: 1px solid rgba(26,23,20,0.08);
+  }
+  .pic-btn {
+    flex: 1;
+    padding: 6px;
+    border: 1px solid rgba(26,23,20,0.15);
+    border-radius: 6px;
+    background: none;
+    cursor: pointer;
+    font-size: 11px;
+    font-family: var(--font-body);
+    color: var(--ink-muted);
+    transition: all 0.2s;
+  }
+  .pic-btn:hover, .pic-btn.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  /* ── FLUID DEMO ── */
+  .fluid-demo { display: flex; flex-direction: column; gap: 10px; }
+  .fluid-slider-wrap { display: flex; align-items: center; gap: 10px; }
+  .fluid-slider { flex: 1; cursor: pointer; }
+  .fluid-preview {
+    border: 2px dashed rgba(26,23,20,0.15);
+    border-radius: 8px;
+    padding: 12px;
+    position: relative;
+  }
+  .fluid-box {
+    background: var(--accent);
+    height: 40px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+    font-weight: 500;
+    transition: width 0.3s var(--ease-out);
+  }
+  .fluid-cols {
+    display: grid;
+    gap: 6px;
+    transition: grid-template-columns 0.3s var(--ease-out);
+  }
+  .fluid-col-box {
+    background: var(--teal-light);
+    height: 50px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--teal);
+  }
+
+  /* ── GRID DEMO ── */
+  .grid-demo {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .gdemo {
+    background: var(--paper-warm);
+    border-radius: 8px;
+    padding: 10px;
+    gap: 6px;
+    display: grid;
+  }
+  .gdemo-cell {
+    background: var(--paper-card);
+    border-radius: 4px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--ink-muted);
+    border: 1px solid rgba(26,23,20,0.08);
+  }
+  .gdemo-cell.main { background: var(--accent); color: white; border-color: var(--accent); height: 70px; }
+
+  /* ── TYPOGRAPHY DEMO ── */
+  .typo-demo {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .typo-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .typo-label { font-size: 11px; color: var(--ink-faint); min-width: 56px; font-family: var(--font-mono); }
+  .typo-bar {
+    height: 4px;
+    background: var(--paper-warm);
+    border-radius: 2px;
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+  .typo-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: var(--accent);
+  }
+  .typo-text { font-family: var(--font-mono); font-size: 11px; color: var(--ink-muted); min-width: 40px; text-align: right; }
+
+  /* ── IMAGE DEMO ── */
+  .img-demo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .img-bad, .img-good {
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+  }
+  .img-status {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 4px;
+    z-index: 2;
+  }
+  .img-status.bad { background: #fde8e8; color: #a32d2d; }
+  .img-status.good { background: #e0f2ef; color: #0f6e56; }
+  .img-box {
+    width: 100%;
+    height: 100px;
+    background: var(--paper-warm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: var(--ink-muted);
+    position: relative;
+  }
+  .img-overflow {
+    width: 140%;
+    background: var(--accent-light);
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: var(--accent-dark);
+    font-weight: 500;
+    border: 2px dashed var(--accent);
+  }
+  .img-fit {
+    width: 100%;
+    background: var(--teal-light);
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: var(--teal);
+    font-weight: 500;
+    border: 2px solid var(--teal);
+  }
+  .overflow-badge {
+    position: absolute;
+    bottom: 6px;
+    left: 6px;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: var(--accent);
+    color: white;
+  }
+
+  /* ── CHECKLIST ── */
+  .checklist {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 5vw, 80px) 80px;
+  }
+  .checklist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin-top: 32px;
+  }
+  .check-card {
+    background: var(--paper-card);
+    border: 1px solid rgba(26,23,20,0.08);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .check-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,23,20,0.06); }
+  .check-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 16px;
+  }
+  .check-icon.done { background: var(--teal-light); }
+  .check-title { font-weight: 500; font-size: 14px; margin-bottom: 4px; }
+  .check-desc { font-size: 13px; color: var(--ink-muted); line-height: 1.6; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    padding: 40px clamp(20px, 5vw, 80px);
+    font-size: 13px;
+    margin-top: 40px;
+  }
+  footer strong { color: rgba(255,255,255,0.9); font-weight: 500; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; gap: 40px; }
+    .step { grid-template-columns: 1fr; gap: 32px; }
+    .step:nth-child(even) .step-visual { order: 0; }
+    .nav-steps { display: none; }
+  }
+  @media (max-width: 600px) {
+    .device-tablet { display: none; }
+    .img-demo { grid-template-columns: 1fr; }
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: none; }
+  }
+  .hero-text > * {
+    opacity: 0;
+    animation: fadeUp 0.7s var(--ease-out) forwards;
+  }
+  .hero-eyebrow { animation-delay: 0.1s; }
+  .hero h1      { animation-delay: 0.2s; }
+  .hero-desc    { animation-delay: 0.3s; }
+  .hero-cta     { animation-delay: 0.4s; }
+  .hero-visual  { animation: fadeUp 0.8s var(--ease-out) 0.3s both; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Responsive<span>.</span></a>
+  <ul class="nav-steps">
+    <li><a href="#step-1">Viewport</a></li>
+    <li><a href="#step-2">Breakpoints</a></li>
+    <li><a href="#step-3">Fluid layout</a></li>
+    <li><a href="#step-4">Picture</a></li>
+    <li><a href="#step-5">Typography</a></li>
+    <li><a href="#step-6">Images</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <p class="hero-eyebrow">A complete guide</p>
+    <h1>Responsive<br>design, <em>step<br>by step</em></h1>
+    <p class="hero-desc">Learn how to build websites that look perfect on every screen — from a tiny phone to a wide monitor. Six practical steps with live examples.</p>
+    <a href="#step-1" class="hero-cta">
+      Start learning
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+
+  <div class="hero-visual">
+    <div class="device-stack">
+      <div class="device device-desktop">
+        <div class="device-bar">
+          <div class="device-dot"></div><div class="device-dot"></div><div class="device-dot"></div>
+        </div>
+        <div class="device-content">
+          <div class="mock-header"></div>
+          <div class="mock-grid mock-grid-3">
+            <div class="mock-card"></div><div class="mock-card"></div><div class="mock-card"></div>
+          </div>
+          <div class="mock-line"></div>
+          <div class="mock-line short"></div>
+          <div class="mock-line accent"></div>
+        </div>
+      </div>
+      <div class="device device-tablet">
+        <div class="device-bar" style="height:18px">
+          <div class="device-dot" style="width:4px;height:4px"></div>
+          <div class="device-dot" style="width:4px;height:4px"></div>
+        </div>
+        <div class="device-content" style="padding:8px">
+          <div class="mock-header" style="height:8px"></div>
+          <div class="mock-grid mock-grid-2" style="gap:4px">
+            <div class="mock-card" style="height:22px"></div>
+            <div class="mock-card" style="height:22px"></div>
+          </div>
+          <div class="mock-line" style="height:4px"></div>
+        </div>
+      </div>
+      <div class="device device-mobile">
+        <div class="device-bar" style="height:14px">
+          <div class="device-dot" style="width:3px;height:3px"></div>
+        </div>
+        <div class="device-content" style="padding:6px">
+          <div class="mock-header" style="height:6px"></div>
+          <div class="mock-grid mock-grid-1" style="gap:3px">
+            <div class="mock-card" style="height:18px"></div>
+            <div class="mock-card" style="height:18px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;padding:4px 0">
+      <div style="width:8px;height:8px;border-radius:50%;background:var(--teal)"></div>
+      <span style="font-size:12px;color:var(--ink-muted)">Same HTML — adapts to every screen</span>
+    </div>
+  </div>
+</section>
+
+<!-- STEPS -->
+<div class="steps-section">
+  <p class="section-label">Six steps</p>
+
+  <!-- STEP 1 -->
+  <div class="step" id="step-1">
+    <div class="step-content">
+      <div class="step-meta">
+        <div class="step-number">1</div>
+        <span class="step-tag">Foundation</span>
+      </div>
+      <h2 class="step-title">Set the viewport meta tag</h2>
+      <p class="step-body">Without this single line, mobile browsers render your page at ~980px and shrink it — making everything tiny and unreadable. It tells the browser to match the screen's actual width.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-title">index.html — &lt;head&gt;</span>
+          <button class="code-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="kw">&lt;meta</span> <span class="prop">name</span>=<span class="str">"viewport"</span>
+      <span class="prop">content</span>=<span class="str">"width=device-width,
+               initial-scale=1.0"</span><span class="kw">&gt;</span></pre>
+      </div>
+
+      <div class="tip tip-info">
+        <span class="tip-icon">→</span>
+        <span><strong>width=device-width</strong> uses the real screen pixels. <strong>initial-scale=1</strong> prevents auto-zoom on load.</span>
+      </div>
+    </div>
+
+    <div class="step-visual">
+      <div class="visual-card">
+        <div class="visual-card-header">
+          <span class="visual-card-title">How browsers interpret width</span>
+        </div>
+        <div class="visual-card-body">
+          <div class="viewport-demo">
+            <div>
+              <p class="vp-label">Without viewport meta</p>
+              <div style="border:1px dashed rgba(200,80,42,0.4);border-radius:6px;padding:10px;background:var(--accent-light)">
+                <div class="vp-bar-wrap">
+                  <div class="vp-bar" style="width:100%;background:var(--accent);opacity:0.4"></div>
+                  <span class="vp-px" style="color:var(--accent-dark)">~980px</span>
+                </div>
+                <p style="font-size:12px;color:var(--accent-dark);margin-top:6px">Page shrinks to fit — text becomes tiny</p>
+              </div>
+            </div>
+            <div>
+              <p class="vp-label">With viewport meta</p>
+              <div style="border:1px dashed rgba(29,122,107,0.4);border-radius:6px;padding:10px;background:var(--teal-light)">
+                <div class="vp-bar-wrap">
+                  <div class="vp-bar" style="width:45%;background:var(--teal)"></div>
+                  <span class="vp-px" style="color:var(--teal)">375px</span>
+                </div>
+                <p style="font-size:12px;color:var(--teal);margin-top:6px">Matches real screen — crisp and readable</p>
+              </div>
+            </div>
+            <div style="background:var(--paper-warm);border-radius:8px;padding:12px;display:flex;align-items:center;gap:12px">
+              <div style="font-size:28px">&#9888;</div>
+              <p style="font-size:13px;color:var(--ink-muted)">This is the <strong style="color:var(--ink)">single most important</strong> line for any responsive site.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step" id="step-2">
+    <div class="step-content">
+      <div class="step-meta">
+        <div class="step-number">2</div>
+        <span class="step-tag">Media queries</span>
+      </div>
+      <h2 class="step-title">Define your breakpoints</h2>
+      <p class="step-body">Breakpoints are the screen widths where your layout changes. Use <code style="font-family:var(--font-mono);background:var(--paper-warm);padding:1px 5px;border-radius:4px">min-width</code> (mobile-first) — write styles for small screens first, then add overrides for larger ones.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-title">style.css — media queries</span>
+          <button class="code-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="cmt">/* Mobile first — base styles */</span>
+<span class="sel">.card</span> { <span class="prop">width</span>: <span class="val">100%</span>; }
+
+<span class="cmt">/* Tablet ≥ 768px */</span>
+<span class="kw">@media</span> (<span class="prop">min-width</span>: <span class="val">768px</span>) {
+  <span class="sel">.card</span> { <span class="prop">width</span>: <span class="val">48%</span>; }
+}
+
+<span class="cmt">/* Desktop ≥ 1024px */</span>
+<span class="kw">@media</span> (<span class="prop">min-width</span>: <span class="val">1024px</span>) {
+  <span class="sel">.card</span> { <span class="prop">width</span>: <span class="val">32%</span>; }
+}</pre>
+      </div>
+
+      <div class="tip tip-warn">
+        <span class="tip-icon">!</span>
+        <span>Always go <strong>mobile-first</strong>. It forces you to prioritise essential content and is easier to scale up than down.</span>
+      </div>
+    </div>
+
+    <div class="step-visual">
+      <div class="visual-card">
+        <div class="visual-card-header">
+          <span class="visual-card-title">Common breakpoints</span>
+        </div>
+        <div class="visual-card-body">
+          <div class="bp-visual" id="bp-visual">
+            <div class="bp-row">
+              <span class="bp-name">xs</span>
+              <span class="bp-range">0 – 639px</span>
+              <div class="bp-blocks">
+                <div class="bp-block active" style="background:var(--accent)"></div>
+                <div class="bp-block"></div><div class="bp-block"></div><div class="bp-block"></div><div class="bp-block"></div>
+              </div>
+            </div>
+            <div class="bp-row">
+              <span class="bp-name">sm</span>
+              <span class="bp-range">640 – 767px</span>
+              <div class="bp-blocks">
+                <div class="bp-block"></div>
+                <div class="bp-block active" style="background:var(--amber)"></div>
+                <div class="bp-block"></div><div class="bp-block"></div><div class="bp-block"></div>
+              </div>
+            </div>
+            <div class="bp-row">
+              <span class="bp-name">md</span>
+              <span class="bp-range">768 – 1023px</span>
+              <div class="bp-blocks">
+                <div class="bp-block"></div><div class="bp-block"></div>
+                <div class="bp-block active" style="background:var(--teal)"></div>
+                <div class="bp-block"></div><div class="bp-block"></div>
+              </div>
+            </div>
+            <div class="bp-row">
+              <span class="bp-name">lg</span>
+              <span class="bp-range">1024 – 1279px</span>
+              <div class="bp-blocks">
+                <div class="bp-block"></div><div class="bp-block"></div><div class="bp-block"></div>
+                <div class="bp-block active" style="background:#534AB7"></div>
+                <div class="bp-block"></div>
+              </div>
+            </div>
+            <div class="bp-row">
+              <span class="bp-name">xl</span>
+              <span class="bp-range">1280px+</span>
+              <div class="bp-blocks">
+                <div class="bp-block"></div><div class="bp-block"></div><div class="bp-block"></div><div class="bp-block"></div>
+                <div class="bp-block active" style="background:var(--ink)"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step" id="step-3">
+    <div class="step-content">
+      <div class="step-meta">
+        <div class="step-number">3</div>
+        <span class="step-tag">Layout</span>
+      </div>
+      <h2 class="step-title">Use fluid grids — not fixed pixels</h2>
+      <p class="step-body">Replace fixed pixel widths with CSS Grid and <code style="font-family:var(--font-mono);background:var(--paper-warm);padding:1px 5px;border-radius:4px">auto-fit</code>. Columns automatically collapse when the screen shrinks — no breakpoints required.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-title">style.css — fluid grid</span>
+          <button class="code-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="sel">.grid</span> {
+  <span class="prop">display</span>: <span class="val">grid</span>;
+  <span class="prop">grid-template-columns</span>:
+    <span class="val">repeat</span>(<span class="val">auto-fit</span>, <span class="val">minmax</span>(<span class="val">240px</span>, <span class="val">1fr</span>));
+  <span class="prop">gap</span>: <span class="val">1.5rem</span>;
+}
+<span class="cmt">/* Columns collapse below 240px each */</span></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-title">index.html</span>
+          <button class="code-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="kw">&lt;div</span> <span class="prop">class</span>=<span class="str">"grid"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;div</span> <span class="prop">class</span>=<span class="str">"card"</span><span class="kw">&gt;</span>Card 1<span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;div</span> <span class="prop">class</span>=<span class="str">"card"</span><span class="kw">&gt;</span>Card 2<span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;div</span> <span class="prop">class</span>=<span class="str">"card"</span><span class="kw">&gt;</span>Card 3<span class="kw">&lt;/div&gt;</span>
+<span class="kw">&lt;/div&gt;</span></pre>
+      </div>
+    </div>
+
+    <div class="step-visual">
+      <div class="visual-card">
+        <div class="visual-card-header">
+          <span class="visual-card-title">Drag slider to resize</span>
+        </div>
+        <div class="visual-card-body">
+          <div class="fluid-demo">
+            <div class="fluid-slider-wrap">
+              <span style="font-size:12px;color:var(--ink-muted)">Narrow</span>
+              <input type="range" id="grid-slider" class="fluid-slider" min="1" max="3" value="3" step="1">
+              <span style="font-size:12px;color:var(--ink-muted)">Wide</span>
+            </div>
+            <div class="fluid-preview">
+              <div class="fluid-cols" id="fluid-cols">
+                <div class="fluid-col-box">Card 1</div>
+                <div class="fluid-col-box">Card 2</div>
+                <div class="fluid-col-box">Card 3</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:12px;color:var(--ink-muted)">Columns:</span>
+              <span id="col-count" style="font-family:var(--font-mono);font-size:13px;font-weight:500;color:var(--accent)">3</span>
+              <span style="font-size:12px;color:var(--ink-muted)">— layout auto-adapts with no JS</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step" id="step-4">
+    <div class="step-content">
+      <div class="step-meta">
+        <div class="step-number">4</div>
+        <span class="step-tag">Responsive images</span>
+      </div>
+      <h2 class="step-title">Use &lt;picture&gt; for art direction</h2>
+      <p class="step-body">The <code style="font-family:var(--font-mono);background:var(--paper-warm);padding:1px 5px;border-radius:4px">&lt;picture&gt;</code> element lets you serve different image crops or sizes depending on the screen. Wide shots for desktop, tight crops for mobile — all with the same HTML element.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-title">index.html — picture element</span>
+          <button class="code-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="kw">&lt;picture&gt;</span>
+  <span class="cmt">&lt;!-- Desktop: wide landscape --&gt;</span>
+  <span class="kw">&lt;source</span>
+    <span class="prop">media</span>=<span class="str">"(min-width: 1024px)"</span>
+    <span class="prop">srcset</span>=<span class="str">"hero-wide.jpg"</span><span class="kw">&gt;</span>
+
+  <span class="cmt">&lt;!-- Tablet: medium crop --&gt;</span>
+  <span class="kw">&lt;source</span>
+    <span class="prop">media</span>=<span class="str">"(min-width: 768px)"</span>
+    <span class="prop">srcset</span>=<span class="str">"hero-medium.jpg"</span><span class="kw">&gt;</span>
+
+  <span class="cmt">&lt;!-- Mobile: portrait/tight --&gt;</span>
+  <span class="kw">&lt;img</span>
+    <span class="prop">src</span>=<span class="str">"hero-mobile.jpg"</span>
+    <span class="prop">alt</span>=<span class="str">"Hero image"</span><span class="kw">&gt;</span>
+<span class="kw">&lt;/picture&gt;</span></pre>
+      </div>
+
+      <div class="tip tip-accent">
+        <span class="tip-icon">★</span>
+        <span>Also add <strong>srcset with sizes</strong> on a plain <code style="font-family:var(--font-mono);">&lt;img&gt;</code> for resolution switching — let the browser pick the best file size automatically.</span>
+      </div>
+    </div>
+
+    <div class="step-visual">
+      <div class="visual-card">
+        <div class="visual-card-header">
+          <span class="visual-card-title">Same &lt;picture&gt;, different crops</span>
+        </div>
+        <div class="visual-card-body">
+          <div class="picture-demo" id="picture-demo">
+            <span class="picture-label" id="picture-label">desktop</span>
+            <div id="picture-display" style="width:100%;height:180px;background:var(--paper-warm);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+              <!-- Desktop crop: full scene -->
+              <svg id="crop-desktop" width="100%" height="180" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
+                <rect width="400" height="180" fill="#e8f4f0"/>
+                <rect x="0" y="100" width="400" height="80" fill="#a8d5c8"/>
+                <circle cx="200" cy="60" r="40" fill="#f4a261" opacity="0.8"/>
+                <rect x="60" y="90" width="30" height="60" fill="#2d6a4f"/>
+                <rect x="300" y="85" width="40" height="65" fill="#2d6a4f"/>
+                <rect x="140" y="110" width="120" height="50" fill="#e9c46a" rx="4"/>
+                <rect x="170" y="115" width="20" height="45" fill="#8b5e3c"/>
+                <rect x="210" y="125" width="30" height="35" fill="#e76f51" rx="2"/>
+              </svg>
+              <!-- Tablet crop: medium -->
+              <svg id="crop-tablet" width="100%" height="180" viewBox="100 20 200 180" preserveAspectRatio="xMidYMid slice" style="display:none;position:absolute;top:0;left:0">
+                <rect width="400" height="280" fill="#e8f4f0"/>
+                <rect x="0" y="200" width="400" height="80" fill="#a8d5c8"/>
+                <circle cx="200" cy="80" r="50" fill="#f4a261" opacity="0.8"/>
+                <rect x="140" y="180" width="120" height="80" fill="#e9c46a" rx="4"/>
+                <rect x="170" y="190" width="20" height="70" fill="#8b5e3c"/>
+                <rect x="210" y="200" width="30" height="60" fill="#e76f51" rx="2"/>
+              </svg>
+              <!-- Mobile crop: portrait tight -->
+              <svg id="crop-mobile" width="100%" height="180" viewBox="150 40 100 200" preserveAspectRatio="xMidYMid slice" style="display:none;position:absolute;top:0;left:0">
+                <rect width="400" height="280" fill="#e8f4f0"/>
+                <rect x="0" y="200" width="400" height="80" fill="#a8d5c8"/>
+                <circle cx="200" cy="80" r="50" fill="#f4a261" opacity="0.8"/>
+                <rect x="140" y="180" width="120" height="80" fill="#e9c46a" rx="4"/>
+                <rect x="170" y="190" width="20" height="70" fill="#8b5e3c"/>
+                <rect x="210" y="200" width="30" height="60" fill="#e76f51" rx="2"/>
+              </svg>
+            </div>
+            <div class="picture-switcher">
+              <button class="pic-btn active" onclick="switchCrop('desktop', this)">Desktop</button>
+              <button class="pic-btn" onclick="switchCrop('tablet', this)">Tablet</button>
+              <button class="pic-btn" onclick="switchCrop('mobile', this)">Mobile</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="step" id="step-5">
+    <div class="step-content">
+      <div class="step-meta">
+        <div class="step-number">5</div>
+        <span class="step-tag">Typography</span>
+      </div>
+      <h2 class="step-title">Scale type fluidly with clamp()</h2>
+      <p class="step-body"><code style="font-family:var(--font-mono);background:var(--paper-warm);padding:1px 5px;border-radius:4px">clamp(min, preferred, max)</code> makes font sizes flow smoothly between screen sizes without any media queries — fewer rules, more elegant results.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-title">style.css — fluid typography</span>
+          <button class="code-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="sel">h1</span> {
+  <span class="cmt">/* min 28px → scales → max 64px */</span>
+  <span class="prop">font-size</span>: <span class="val">clamp</span>(<span class="val">1.75rem</span>, <span class="val">5vw</span>, <span class="val">4rem</span>);
+}
+
+<span class="sel">p</span> {
+  <span class="prop">font-size</span>: <span class="val">clamp</span>(<span class="val">1rem</span>, <span class="val">1.5vw</span>, <span class="val">1.125rem</span>);
+  <span class="prop">max-width</span>: <span class="val">65ch</span>; <span class="cmt">/* readable line length */</span>
+  <span class="prop">line-height</span>: <span class="val">1.7</span>;
+}</pre>
+      </div>
+
+      <div class="tip tip-info">
+        <span class="tip-icon">→</span>
+        <span>Keep body text line length under <strong>75 characters</strong> on all screens using <code style="font-family:var(--font-mono)">max-width: 65ch</code>.</span>
+      </div>
+    </div>
+
+    <div class="step-visual">
+      <div class="visual-card">
+        <div class="visual-card-header">
+          <span class="visual-card-title">How clamp() works</span>
+        </div>
+        <div class="visual-card-body">
+          <div class="typo-demo">
+            <p style="font-size:12px;color:var(--ink-muted);margin-bottom:4px">Drag to see font size change</p>
+            <input type="range" id="typo-slider" min="320" max="1440" value="800" style="width:100%;margin-bottom:14px">
+
+            <div style="background:var(--paper-warm);border-radius:8px;padding:14px;margin-bottom:12px;min-height:60px;display:flex;flex-direction:column;justify-content:center">
+              <div id="typo-h1" style="font-family:var(--font-display);line-height:1.1;color:var(--ink);transition:font-size 0.2s">Heading</div>
+              <div id="typo-p" style="color:var(--ink-muted);line-height:1.6;margin-top:6px;transition:font-size 0.2s">Body text flows here</div>
+            </div>
+
+            <div class="typo-row">
+              <span class="typo-label">h1 size</span>
+              <div class="typo-bar"><div class="typo-fill" id="typo-h1-bar" style="width:55%"></div></div>
+              <span class="typo-text" id="typo-h1-val">40px</span>
+            </div>
+            <div class="typo-row">
+              <span class="typo-label">p size</span>
+              <div class="typo-bar"><div class="typo-fill" id="typo-p-bar" style="width:30%;background:var(--teal)"></div></div>
+              <span class="typo-text" id="typo-p-val">16px</span>
+            </div>
+            <div class="typo-row">
+              <span class="typo-label">viewport</span>
+              <div class="typo-bar"><div class="typo-fill" id="typo-vp-bar" style="width:43%;background:var(--ink-faint)"></div></div>
+              <span class="typo-text" id="typo-vp-val">800px</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 6 -->
+  <div class="step" id="step-6">
+    <div class="step-content">
+      <div class="step-meta">
+        <div class="step-number">6</div>
+        <span class="step-tag">Images</span>
+      </div>
+      <h2 class="step-title">Make images flexible — always</h2>
+      <p class="step-body">Images with fixed widths overflow their container on small screens. Two lines of CSS prevent 99% of responsive image problems:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-title">style.css — flexible images</span>
+          <button class="code-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="sel">img</span> {
+  <span class="prop">max-width</span>: <span class="val">100%</span>;   <span class="cmt">/* never overflow */</span>
+  <span class="prop">height</span>: <span class="val">auto</span>;      <span class="cmt">/* keep ratio */</span>
+  <span class="prop">display</span>: <span class="val">block</span>;    <span class="cmt">/* remove gap */</span>
+}
+
+<span class="cmt">/* For cover images, use object-fit */</span>
+<span class="sel">.hero-img</span> {
+  <span class="prop">width</span>: <span class="val">100%</span>;
+  <span class="prop">height</span>: <span class="val">300px</span>;
+  <span class="prop">object-fit</span>: <span class="val">cover</span>;
+}</pre>
+      </div>
+
+      <div class="tip tip-accent">
+        <span class="tip-icon">★</span>
+        <span>Add this rule to your CSS reset so <strong>every image on every page</strong> is automatically responsive — no extra work needed.</span>
+      </div>
+    </div>
+
+    <div class="step-visual">
+      <div class="visual-card">
+        <div class="visual-card-header">
+          <span class="visual-card-title">With vs without max-width: 100%</span>
+        </div>
+        <div class="visual-card-body">
+          <div class="img-demo">
+            <div class="img-bad">
+              <span class="img-status bad">✗ Bad</span>
+              <div class="img-box" style="overflow:hidden">
+                <div class="img-overflow">img width: 600px</div>
+                <div class="overflow-badge">overflows!</div>
+              </div>
+              <div style="padding:8px;font-size:11px;color:var(--ink-muted);background:var(--paper-warm)">
+                <code style="font-family:var(--font-mono)">width: 600px</code> — breaks on small screens
+              </div>
+            </div>
+            <div class="img-good">
+              <span class="img-status good">✓ Good</span>
+              <div class="img-box">
+                <div class="img-fit">fits perfectly</div>
+              </div>
+              <div style="padding:8px;font-size:11px;color:var(--ink-muted);background:var(--paper-warm)">
+                <code style="font-family:var(--font-mono)">max-width: 100%</code> — always contained
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKLIST -->
+<section class="checklist">
+  <p class="section-label">Launch checklist</p>
+  <h2 style="font-family:var(--font-display);font-size:clamp(28px,4vw,48px);margin-bottom:8px">Before you ship</h2>
+  <p style="color:var(--ink-muted);font-size:15px">Run through these before every launch</p>
+
+  <div class="checklist-grid">
+    <div class="check-card">
+      <div class="check-icon done">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9l4 4 8-8" stroke="#0f6e56" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div>
+        <p class="check-title">Viewport meta tag</p>
+        <p class="check-desc">Present in every HTML page's &lt;head&gt;</p>
+      </div>
+    </div>
+    <div class="check-card">
+      <div class="check-icon done">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9l4 4 8-8" stroke="#0f6e56" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div>
+        <p class="check-title">No fixed pixel widths</p>
+        <p class="check-desc">Layout uses %, fr, or clamp() units</p>
+      </div>
+    </div>
+    <div class="check-card">
+      <div class="check-icon done">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9l4 4 8-8" stroke="#0f6e56" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div>
+        <p class="check-title">Images are flexible</p>
+        <p class="check-desc">max-width: 100% on all img tags</p>
+      </div>
+    </div>
+    <div class="check-card">
+      <div class="check-icon done">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9l4 4 8-8" stroke="#0f6e56" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div>
+        <p class="check-title">Readable at 320px</p>
+        <p class="check-desc">No horizontal scroll on small phones</p>
+      </div>
+    </div>
+    <div class="check-card">
+      <div class="check-icon done">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9l4 4 8-8" stroke="#0f6e56" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div>
+        <p class="check-title">Touch targets ≥ 44px</p>
+        <p class="check-desc">Buttons and links easy to tap</p>
+      </div>
+    </div>
+    <div class="check-card">
+      <div class="check-icon done">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9l4 4 8-8" stroke="#0f6e56" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div>
+        <p class="check-title">Tested on real devices</p>
+        <p class="check-desc">DevTools + physical phone check</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>Responsive Design Guide</strong> — Built with HTML, CSS &amp; zero frameworks</p>
+  <p style="margin-top:8px">Every layout technique on this page is itself responsive — resize your window to see.</p>
+</footer>
+
+<script>
+  // ── Scroll reveal ──
+  const steps = document.querySelectorAll('.step');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  steps.forEach(s => observer.observe(s));
+
+  // ── Nav active state ──
+  const navLinks = document.querySelectorAll('.nav-steps a');
+  const sections = document.querySelectorAll('.step');
+  const secObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id);
+        });
+      }
+    });
+  }, { threshold: 0.4 });
+  sections.forEach(s => secObserver.observe(s));
+
+  // ── Grid slider ──
+  const gridSlider = document.getElementById('grid-slider');
+  const fluidCols  = document.getElementById('fluid-cols');
+  const colCount   = document.getElementById('col-count');
+  if (gridSlider) {
+    gridSlider.addEventListener('input', () => {
+      const n = gridSlider.value;
+      fluidCols.style.gridTemplateColumns = `repeat(${n}, 1fr)`;
+      colCount.textContent = n;
+    });
+  }
+
+  // ── Picture switcher ──
+  function switchCrop(type, btn) {
+    document.querySelectorAll('.pic-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('picture-label').textContent = type;
+    ['desktop','tablet','mobile'].forEach(t => {
+      const el = document.getElementById('crop-' + t);
+      if (el) el.style.display = t === type ? 'block' : 'none';
+    });
+  }
+
+  // ── Typography clamp demo ──
+  const typoSlider = document.getElementById('typo-slider');
+  if (typoSlider) {
+    typoSlider.addEventListener('input', () => {
+      const vp = +typoSlider.value;
+      const h1 = Math.round(Math.min(64, Math.max(28, 28 + (vp - 320) * (64-28)/(1440-320))));
+      const p  = Math.round(Math.min(18, Math.max(16, 16 + (vp - 320) * 2/1120)));
+      document.getElementById('typo-h1').style.fontSize = h1 + 'px';
+      document.getElementById('typo-p').style.fontSize  = p + 'px';
+      document.getElementById('typo-h1-val').textContent = h1 + 'px';
+      document.getElementById('typo-p-val').textContent  = p + 'px';
+      document.getElementById('typo-vp-val').textContent = vp + 'px';
+      document.getElementById('typo-h1-bar').style.width = ((h1-28)/(64-28)*80+10) + '%';
+      document.getElementById('typo-p-bar').style.width  = ((p-16)/2*60+20) + '%';
+      document.getElementById('typo-vp-bar').style.width = ((vp-320)/(1440-320)*90+5) + '%';
+    });
+    typoSlider.dispatchEvent(new Event('input'));
+  }
+
+  // ── Copy code ──
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 1500);
+    });
+  }
+</script>
+</body>
+</html>
