@@ -1,0 +1,10 @@
+body { font-family: system-ui, sans-serif; display: flex; gap: 16px; }
+.card { width: 260px; padding: 16px; border: 1px solid #ccc; }
+.plain p { margin: 4px 0; }               /* everything looks the same */
+
+.designed .label { font-size: 12px; text-transform: uppercase;
+                   letter-spacing: .08em; color: #555; margin: 0; }
+.designed h2 { font-size: 24px; margin: 4px 0 8px; }
+.designed p  { color: #333; line-height: 1.5; }
+.btn { display: inline-block; background: #1d4ed8; color: #fff;
+       padding: 10px 16px; border-radius: 6px; text-decoration: none; }

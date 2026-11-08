@@ -1,0 +1,6 @@
+[
+  { "name": "Iced coffee", "price": 1.5 },
+  { "name": "Black coffee", "price": 1.25 },
+  { "name": "Coconut latte", "price": 2.25 },
+  { "name": "Lemongrass tea", "price": 1.25 }
+]

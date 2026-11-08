@@ -1,0 +1,19 @@
+/* Lab 5+: your styles. Start with the box-sizing reset from Session 6. */
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+  /* Lab 8: design tokens */
+  --text: #1f2937;
+  --bg: #ffffff;
+  --brand: #1d4ed8;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg);
+}
+
+img { max-width: 100%; height: auto; }

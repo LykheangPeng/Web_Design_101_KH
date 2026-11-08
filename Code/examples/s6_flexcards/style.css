@@ -1,0 +1,12 @@
+.cards {
+  display: flex;
+  flex-wrap: wrap;         /* move to a new line when needed */
+  gap: 12px;
+}
+.card {
+  flex: 1 1 160px;         /* grow, shrink, start at 160px */
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+}
+.card h3 { margin: 0 0 4px; }

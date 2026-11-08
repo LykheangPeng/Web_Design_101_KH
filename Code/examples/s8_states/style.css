@@ -1,0 +1,12 @@
+.btn {
+  font: inherit; padding: 10px 16px; border: 0; border-radius: 8px;
+  background: #1d4ed8; color: #fff; cursor: pointer;
+  transition: background-color .2s ease, transform .2s ease;
+}
+.btn:hover        { background: #1e40af; transform: translateY(-1px); }
+.btn:focus-visible { outline: 3px solid #f59e0b; outline-offset: 2px; }
+.btn:disabled     { background: #9ca3af; cursor: not-allowed; }
+
+@media (prefers-reduced-motion: reduce) {
+  .btn { transition: none; }
+}

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>s12_a11y</title>
+</head>
+<body>
+  <style>
+    body{font-family:system-ui,sans-serif}
+    .icon-btn{font-size:20px;min-width:44px;min-height:44px}
+    .skip{position:absolute;left:-999px}
+    .skip:focus{left:8px}
+  </style>
+  
+  <a class="skip" href="#main">Skip to content</a>
+  <header><h1>Mekong Coffee</h1></header>
+  <main id="main">
+    <img src="cup.svg" alt="Iced coffee in a glass with ice" width="80" height="80">
+    <img src="divider.svg" alt="" width="200" height="8">  <!-- decorative -->
+  
+    <button class="icon-btn" type="button" aria-label="Add to cart">
+      &#128722;
+    </button>
+  
+    <label for="qty">Quantity</label>
+    <input id="qty" type="number" min="1" value="1">
+  </main>
+</body>
+</html>

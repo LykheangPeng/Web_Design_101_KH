@@ -1,0 +1,5 @@
+p        { color: green;  }   /* specificity 0-0-1 */
+.intro   { color: orange; }   /* specificity 0-1-0 */
+#first   { color: purple; }   /* specificity 1-0-0 */
+p.intro  { font-size: 20px; }
+.intro   { font-size: 14px; } /* loses: p.intro (0-1-1) is more specific */

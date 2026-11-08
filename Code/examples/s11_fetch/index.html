@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>s11_fetch</title>
+</head>
+<body>
+  <h2>Menu</h2>
+  <p id="status">Loading...</p>
+  <ul id="menu"></ul>
+  
+  <script>
+    async function loadMenu() {
+      const status = document.querySelector("#status");
+      try {
+        const response = await fetch("menu.json");
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const items = await response.json();
+  
+        const list = document.querySelector("#menu");
+        for (const item of items) {
+          const li = document.createElement("li");
+          li.textContent = `${item.name} - $${item.price.toFixed(2)}`;
+          list.append(li);
+        }
+        status.textContent = `${items.length} drinks loaded`;
+      } catch (error) {
+        status.textContent = "Sorry, the menu could not load.";
+        console.error(error);
+      }
+    }
+    loadMenu();
+  </script>
+</body>
+</html>

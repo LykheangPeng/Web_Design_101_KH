@@ -1,0 +1,15 @@
+.page {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  grid-template-areas:
+    "header header"
+    "nav    main"
+    "footer footer";
+  gap: 8px;
+  min-height: 220px;
+}
+header { grid-area: header; }
+nav    { grid-area: nav; }
+main   { grid-area: main; }
+footer { grid-area: footer; }
+.page > * { background: #e0e7ff; padding: 12px; }

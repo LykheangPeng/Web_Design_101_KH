@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>s10_counter</title>
+</head>
+<body>
+  <p>Cups: <output id="count">0</output></p>
+  <button id="minus" type="button">-</button>
+  <button id="add" type="button">+</button>
+  
+  <script>
+    let count = 0;
+    const out = document.querySelector("#count");
+  
+    function render() { out.textContent = count; }
+  
+    document.querySelector("#add").addEventListener("click", () => {
+      count++;
+      render();
+    });
+    document.querySelector("#minus").addEventListener("click", () => {
+      if (count > 0) count--;
+      render();
+    });
+  </script>
+</body>
+</html>

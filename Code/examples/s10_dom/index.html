@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>s10_dom</title>
+</head>
+<body>
+  <h1 id="greeting">Hello</h1>
+  <ul id="list"></ul>
+  
+  <script>
+    const title = document.querySelector("#greeting");
+    title.textContent = "Welcome to Mekong Coffee";
+    title.style.color = "#1d4ed8";
+  
+    const drinks = ["Iced coffee", "Green tea", "Coconut latte"];
+    const list = document.querySelector("#list");
+    for (const d of drinks) {
+      const li = document.createElement("li");
+      li.textContent = d;
+      list.append(li);
+    }
+  </script>
+</body>
+</html>

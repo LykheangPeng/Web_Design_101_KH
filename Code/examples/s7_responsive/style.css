@@ -1,0 +1,12 @@
+/* mobile first: one column */
+.gallery {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+.gallery div { background: #fde68a; padding: 16px; text-align: center; }
+
+/* tablet and up: three columns */
+@media (min-width: 600px) {
+  .gallery { grid-template-columns: repeat(3, 1fr); }
+}

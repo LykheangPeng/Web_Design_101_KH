@@ -1,0 +1,14 @@
+/* type selector: every <p> */
+p { color: #333; }
+
+/* class selector: elements with class="note" */
+.note { color: #b45309; font-style: italic; }
+
+/* id selector: the one element with id="title" */
+#title { color: #1d4ed8; }
+
+/* descendant selector: <li> inside .menu */
+.menu li { margin-bottom: 4px; }
+
+/* two classes on one element */
+li.new { font-weight: bold; }
